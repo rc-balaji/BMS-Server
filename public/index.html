@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMS Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body class="bg-light">
+  <div class="container my-5">
+    <h1 class="text-center text-primary mb-4">BMS Dashboard</h1>
+
+    <!-- Data Table -->
+    <div class="table-responsive">
+      <table id="dataTable" class="table table-bordered table-striped">
+        <thead class="table-primary">
+          <tr>
+            <th>Field</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be dynamically populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Update Form -->
+    <div class="card p-4 shadow-sm">
+      <h3 class="text-center">Update Data</h3>
+      <form id="updateForm">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name:</label>
+          <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name">
+        </div>
+        <div class="mb-3">
+          <label for="mac_address" class="form-label">MAC Address:</label>
+          <input type="text" id="mac_address" name="mac_address" class="form-control" placeholder="Enter MAC Address">
+        </div>
+        <div class="mb-3">
+          <label for="topic" class="form-label">Topic:</label>
+          <input type="text" id="topic" name="topic" class="form-control" placeholder="Enter Topic">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Update</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom Script -->
+  <script>
+    $(document).ready(function () {
+      // Fetch and display data
+      function fetchData() {
+        $.get('/api/data', function (data) {
+          const tableBody = $('#dataTable tbody');
+          tableBody.empty();
+          $.each(data, function (key, value) {
+            tableBody.append(`<tr><td>${key}</td><td>${value}</td></tr>`);
+          });
+        });
+      }
+
+      // Handle form submission
+      $('#updateForm').submit(function (e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+        $.post('/api/data', formData, function () {
+          fetchData();
+        });
+      });
+
+      // Initial data fetch
+      fetchData();
+    });
+  </script>
+</body>
+
+</html>
