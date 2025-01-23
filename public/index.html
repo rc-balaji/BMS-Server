@@ -61,9 +61,16 @@
         $.get('/api/data', function (data) {
           const tableBody = $('#dataTable tbody');
           tableBody.empty();
+
+          // Populate the data table
           $.each(data, function (key, value) {
             tableBody.append(`<tr><td>${key}</td><td>${value}</td></tr>`);
           });
+
+          // Pre-fill the form fields with the fetched data
+          if (data.name) $('#name').val(data.name);
+          if (data.mac_address) $('#mac_address').val(data.mac_address);
+          if (data.topic) $('#topic').val(data.topic);
         });
       }
 
@@ -71,8 +78,9 @@
       $('#updateForm').submit(function (e) {
         e.preventDefault();
         const formData = $(this).serialize();
+
         $.post('/api/data', formData, function () {
-          fetchData();
+          fetchData(); // Refresh data after successful submission
         });
       });
 
@@ -80,6 +88,7 @@
       fetchData();
     });
   </script>
+
 </body>
 
 </html>
